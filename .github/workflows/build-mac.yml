@@ -29,10 +29,24 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Restore source package
+        run: |
+          if ls VRMOTION-VRPLAYER-LITE-MAC-SOURCE.zip.* 1>/dev/null 2>&1; then
+            cat VRMOTION-VRPLAYER-LITE-MAC-SOURCE.zip.* > source.zip
+            rm -rf source
+            mkdir source
+            unzip -q source.zip -d source
+            echo "APP_DIR=source" >> "$GITHUB_ENV"
+          else
+            echo "APP_DIR=." >> "$GITHUB_ENV"
+          fi
+
       - name: Install dependencies
+        working-directory: ${{ env.APP_DIR }}
         run: npm install
 
       - name: Build macOS ${{ matrix.arch }}
+        working-directory: ${{ env.APP_DIR }}
         run: npm run build:mac:${{ matrix.arch }}
 
       - name: Upload artifacts
@@ -40,7 +54,7 @@ jobs:
         with:
           name: VRMOTION-VRPLAYER-LITE-1.05-mac-${{ matrix.arch }}
           path: |
-            dist-mac/*.dmg
-            dist-mac/*.zip
-            dist-mac/latest-mac.yml
+            ${{ env.APP_DIR }}/dist-mac/*.dmg
+            ${{ env.APP_DIR }}/dist-mac/*.zip
+            ${{ env.APP_DIR }}/dist-mac/latest-mac.yml
           if-no-files-found: error
