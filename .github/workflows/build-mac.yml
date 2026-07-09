@@ -35,7 +35,7 @@ jobs:
             cat VRMOTION-VRPLAYER-LITE-MAC-SOURCE.zip.* > source.zip
             rm -rf source
             mkdir source
-            unzip -q source.zip -d source
+            python3 -c 'import os, zipfile; z=zipfile.ZipFile("source.zip"); [os.makedirs(os.path.dirname(os.path.join("source", i.filename.replace("\\", "/").lstrip("/"))), exist_ok=True) or open(os.path.join("source", i.filename.replace("\\", "/").lstrip("/")), "wb").write(z.read(i)) for i in z.infolist() if i.filename.replace("\\", "/").lstrip("/") and not i.filename.replace("\\", "/").lstrip("/").endswith("/") and ".." not in i.filename.replace("\\", "/").split("/")]'
             echo "APP_DIR=source" >> "$GITHUB_ENV"
           else
             echo "APP_DIR=." >> "$GITHUB_ENV"
