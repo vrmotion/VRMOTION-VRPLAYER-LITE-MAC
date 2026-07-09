@@ -1,0 +1,46 @@
+name: Build Mac
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-mac:
+    name: macOS ${{ matrix.arch }}
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x64
+          - arm64
+
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build macOS ${{ matrix.arch }}
+        run: npm run build:mac:${{ matrix.arch }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: VRMOTION-VRPLAYER-LITE-1.05-mac-${{ matrix.arch }}
+          path: |
+            dist-mac/*.dmg
+            dist-mac/*.zip
+            dist-mac/latest-mac.yml
+          if-no-files-found: error
