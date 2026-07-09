@@ -1,0 +1,46 @@
+{
+  "name": "vrmotion-vrplayer-lite",
+  "version": "1.0.5",
+  "description": "VRMOTION VRPLAYER LITE desktop app",
+  "author": "VRMOTION",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac:x64": "electron-builder --mac dmg zip --x64",
+    "build:mac:arm64": "electron-builder --mac dmg zip --arm64",
+    "build:mac": "electron-builder --mac dmg zip --x64 --arm64"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "31.7.7",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "ai.vrmotion.vrplayer.lite",
+    "productName": "VRMOTION VRPLAYER LITE",
+    "directories": {
+      "output": "dist-mac"
+    },
+    "files": [
+      "electron/**/*",
+      "public/**/*",
+      "server.js",
+      "package.json",
+      "REC_FORMAT_RECOMMENDATIONS.txt"
+    ],
+    "mac": {
+      "category": "public.app-category.video",
+      "identity": null,
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "artifactName": "VRMOTION-VRPLAYER-LITE-1.05-mac-${arch}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "VRMOTION-VRPLAYER-LITE-1.05-mac-${arch}.${ext}"
+    }
+  }
+}
